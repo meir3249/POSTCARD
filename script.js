@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const postcard = document.getElementById('postcard');
     const audio = document.getElementById('flipAudio');
     const typingContainer = document.getElementById('typing-text');
-    
+    const messageContainer = document.querySelector('.message-container');
+
     let hasFlipped = false;
 
     const messageText = `מאמי שלי קטנה,
@@ -47,13 +48,23 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // בודקים אם הגלילה נמצאת קרוב לתחתית לפני שמוסיפים את האות החדשה
+        // (מרחק של פחות מ-50 פיקסלים מהסוף)
+        const isNearBottom = messageContainer.scrollHeight - messageContainer.scrollTop - messageContainer.clientHeight < 50;
+
+
         let char = text.charAt(i);
-        
+
         // המרת ירידות שורה לתגיות BR
         if (char === '\n') {
             typingContainer.innerHTML += '<br>';
         } else {
             typingContainer.innerHTML += char;
+        }
+
+        // אם המשתמשת לא גללה למעלה בעצמה, נגלול אוטומטית למטה כדי לעקוב אחרי הטקסט
+        if (isNearBottom) {
+            messageContainer.scrollTop = messageContainer.scrollHeight;
         }
 
         // חישוב זמן השהייה משתנה (Humanized Delay)
